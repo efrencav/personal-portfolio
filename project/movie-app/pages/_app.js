@@ -1,14 +1,20 @@
 import App from 'next/app'
 import Head from 'next/head'
-import Navbar from './../components/navbar'
+import Navbar from '../components/navbar'
+import Footer from './../components/footer'
+
 
 class MovieApp extends App {
 
     // TODO: execute here getInitialProps and pass this data to your page
+    static async getInitialProps(appContext) {
+        const appProps = await App.getInitialProps(appContext)
+        return { ...appProps }
+    }
 
     render() {
         // Component holds page you are navigating to
-        const { Component } = this.props
+        const { Component, pageProps } = this.props
         return (
             <div>
                 <Head>
@@ -19,8 +25,20 @@ class MovieApp extends App {
                     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossOrigin="anonymous"></script>
                 </Head>
                 <Navbar />
-                <Component />
-            </div >
+                <div className="base-page">
+                    <Component {...pageProps} />
+                </div>
+                <Footer />
+
+                <style jsx>{
+                    `
+                  .base-page {
+                    padding-top: 80px;
+                  }
+                  `
+                }
+                </style>
+            </div>
         )
     }
 }

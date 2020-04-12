@@ -1,15 +1,17 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import SideMenu from './../components/sideMenu'
 import Carousel from './../components/carousel'
 import MovieList from '../components/movieList'
-import Footer from './../components/footer'
+
 import { getMovies } from '../actions/index'
 
+const Home = (props) => {
+  const [movies, setMovies] = useState([])
+  const { images } = props
 
-const Home = () => {
-  // improvie this becaused its called everytime.
-  const movies = getMovies()
+  getMovies().then((movies) => {
+    setMovies(movies)
+  })
   return (
     <div>
       <div className="home-page">
@@ -19,7 +21,7 @@ const Home = () => {
               <SideMenu />
             </div>
             <div className="col-lg-9">
-              <Carousel />
+              <Carousel images={images} />
               <div className="row">
                 <MovieList movies={movies} />
               </div>
@@ -27,30 +29,24 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <Footer />
-      <style jsx>{
-        `
-      .home-page {
-        padding-top: 80px;
-      }
-      `
-      }
-
-      </style>
     </div>
   )
 
 }
 
+Home.getInitialProps = async () => {
+  const movies = await getMovies()
+  const images = movies.map(movie => ({
+    id: `image-${movie.id}`,
+    image: movies.image
+  }))
 
-// Home.getInitialProps = async () => {
-//   const movies = await getMovies()
+  return {
+    movies,
+    images
+  }
 
-//   return {
-//     movies
-//   }
-
-// }
+}
 
 // class Home extends React.Component {
 
